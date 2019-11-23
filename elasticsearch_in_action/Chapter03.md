@@ -64,3 +64,11 @@
   - 기본적으로 `_index` 값은 비활성이다.
   -\_index 값을 활성화하려면 매핑에서 `enable`옵션을 true로 설정한다.
 ![\_inedx 활성화](https://user-images.githubusercontent.com/49108738/69472912-5d321a00-0df3-11ea-878b-c0aade4e807b.png)
+
+## 3.5 기존 도큐먼트 변경하기
+![기존 도큐먼트 변경하기](https://user-images.githubusercontent.com/49108738/69478958-91c9c400-0e3b-11ea-862b-eac3a55493f6.png)
+- 기존 도큐먼트를 조회 -> 명시된 변경사항을 반영 -> 기존 도큐먼트를 삭제하고 같은 자리에 변경사항이 반영된 새 도큐먼트를 색인
+- 부분 도큐먼트 전송하기
+  - 필드의 압력할 값을 가진 도큐먼트의 일부분을 전송한다. -> 도큐먼트의 URL의 \_update `endpoint`에 HTTP POST 요청으로 전송한다.
+![update](https://user-images.githubusercontent.com/49108738/69479030-41069b00-0e3c-11ea-840f-13a98d0e6386.png)
+  - `upsert`는 존재하지 않는 도큐먼트를 변경할 수 있다.
