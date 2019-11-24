@@ -72,3 +72,37 @@
   - 필드의 압력할 값을 가진 도큐먼트의 일부분을 전송한다. -> 도큐먼트의 URL의 \_update `endpoint`에 HTTP POST 요청으로 전송한다.
 ![update](https://user-images.githubusercontent.com/49108738/69479030-41069b00-0e3c-11ea-840f-13a98d0e6386.png)
   - `upsert`는 존재하지 않는 도큐먼트를 변경할 수 있다.
+  - 스크립트를 이용해서 변경하기
+    - 기본 스크립트 언어는 `Groovy`다.
+    - \_source를 참조하려면 `ctx.\_source`를 사용하고 특정 필드를 참고하려면 `cst.\_source['필드 이름']` 또는 `cts.\_source.필드 이름`을 사용한다.
+![스크립트를 이용해서 변경하기](https://user-images.githubusercontent.com/49108738/69494760-aa50e180-0f02-11ea-9aff-7c83c5f7735e.png)
+- 버전 관리로 동시성 제어 구현하기
+![버전 관리 도식화](https://user-images.githubusercontent.com/49108738/69494892-2992e500-0f04-11ea-8b2a-16dc19dc3459.png)
+![버전 관리 코드](https://user-images.githubusercontent.com/49108738/69494897-33b4e380-0f04-11ea-83a8-e15406bf97da.png)
+  - 버전 관리 코드 예제
+    - 시점1 : 10초 이후에 update1 스크립트가 실행되어서 shert1에 대하여 price를 15 -> 2로 업데이트 한다. 이 때 버전은 1이다.
+    - 시점2 : 10초 이내에 update2 스크립트가 실행되어서 shert1에 대하여 caption을 Learning ES -> Knowing ES로 업데이트 한다. 이 때 버전은 1이다.
+    - 시점3 : update2 스크립트로 인하여 caption이 Knowing ES로 변경되고, Version이 1 -> 2로 변경되었다.
+    - 시점4 : 시점1에서 확인했을 때 Version이 1 이었지만, 현재 Version2 로 확인되어 오류가 발생하고 update1이 실패한다.
+  - 충돌 시, `retry_on_conflic` 옵션을 사용하면 자동으로 재시도 할 수 있다.
+  - 충돌 예상시, 기대하는 버전이 3이라면 `version=3`이라는 옵션으로 재색인을 요청할 수 있다.
+
+## 3.6 데이터 삭제하기
+- 개별 도큐먼트 또는 도큐먼트 그룹 삭제 : 삭제할 대상을 검색시 보이지 않도록만 표시해서 나중에 비동기 방식으로 색인에서 삭제한다.
+  - 단일 도큐먼트 삭제하기
+    - % curl -XDELETE 'localhost:9200/online-shop/shirts/1'
+  - 색인과 변경처럼 삭제도 동시성 관리를 위해 버전 관리를 사용할 수 있다.
+  - 삭제 시, 60초 동안 버전을 유지하여 변경과 재생성에 대한 exception 처리를 할 수 있도록 한다.
+  - 전체 매핑 타입까지 삭제한다. 매핑과 이 타입으로 색인된 모든 도큐먼트까지 삭제한다. 색인을 완전히 삭제하는 것에 비해 타입 삭제 시 더 많은 시간과 자원을 사용한다.
+    - % curl -XDELETE 'localhost:9200/online-shop/shirts
+  - get-together 색인으로 부터 "Elasticsearch"가 포함된 모든 도큐를 삭제하려면 다음 명령을 실행한다.
+    - % curl -XDELETE 'localhost:9200/get-together/_query?q=elasticsearch'
+- 완성된 색인 삭제 : 도큐먼트 그룹을 삭제하는 특수한 경우라서, 성능을 고려해서 사용할만한 방식은 아니다. 주요 작업은 그 색인과 연관된 모든 파일을 삭제하는 것인데, 거의 즉시 처리된다.
+  - 색인 삭제하기
+    - % curl -XDELETE 'localhost:9200/get-together/'
+  - elasticsearch.yml에서 `destructive\_requires\_name` 옵션을 `true`로 변경하면, 삭제 시 일래스틱서치는 \_all뿐만 아니라 색인 이름으로 와일드카드(Wildcard)까지도 거부한다.
+- 색인 닫기 : 닫은 색인은 읽기나 쓰기 작업을 허용하지 않고, 메모리에 load하지도 않는다. 디스크에 남아 있으며, 닫은 색인을 여는 작업만으로도 쉽게 복구할 수 있는 장점이 있다.
+  - 색인 닫기
+    - % curl -XPOST 'localhost:9200/online-shop/_close'
+  - 색인 열기
+    - % curl -XPOST 'localhost:9200/online-shop/_open'
