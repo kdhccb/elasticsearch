@@ -74,7 +74,7 @@
   - `upsert`는 존재하지 않는 도큐먼트를 변경할 수 있다.
   - 스크립트를 이용해서 변경하기
     - 기본 스크립트 언어는 `Groovy`다.
-    - \_source를 참조하려면 `ctx.\_source`를 사용하고 특정 필드를 참고하려면 `cst.\_source['필드 이름']` 또는 `cts.\_source.필드 이름`을 사용한다.
+    - \_source를 참조하려면 `ctx._source`를 사용하고 특정 필드를 참고하려면 `cst._source['필드 이름']` 또는 `cts._source.필드 이름`을 사용한다.
 ![스크립트를 이용해서 변경하기](https://user-images.githubusercontent.com/49108738/69494760-aa50e180-0f02-11ea-9aff-7c83c5f7735e.png)
 - 버전 관리로 동시성 제어 구현하기
 ![버전 관리 도식화](https://user-images.githubusercontent.com/49108738/69494892-2992e500-0f04-11ea-8b2a-16dc19dc3459.png)
