@@ -9,7 +9,7 @@
   - 사전 정의된 필드 : `_ttl`(Time to live), `_timestamp` 등
 
 ### 3.1 도큐먼트 종류를 정의하는 매핑 사용하기
-- 논리적 분한 측면 : 색인(DB) > 타입(테이블) > 도큐먼트
+- 논리적 분할 측면 : 색인(DB) > 타입(테이블) > 도큐먼트
 ![검색 어플리케이션](https://user-images.githubusercontent.com/49108738/69470628-2819cd80-0ddb-11ea-8f7e-134b138ffd15.png)
 - 버전별 type history
   - 5.0 : started enforcing that fields that share the same name across multiple types have compatible mappings.
