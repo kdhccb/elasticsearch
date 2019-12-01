@@ -24,3 +24,20 @@
 
 #### 4.1.3 본문 기반 검색 요청 사용하기
 - DSL : Domain Specific Language
+- 본문 기반 검색 요청을 사용하면, 유연하면서 더 많은 옵션을 제공하는 좀 더 고급 검색을 실행해 볼 수 있다.
+- match_all : 모든 도큐먼트 가져오기
+- \_source : 반환할 필드 목록을 지정
+  - 와일드카드 사용이 가능함. 예를들면, "name"과 "nation" 처럼 "na"로 시작하는 모든 필드를 반환하려면 `\_source : "na*"`를 지정한다.
+  - include : 어떤 필드를 포함할지 지정
+  - exclude : 어떤 필드를 포함하지 않을 지 지정
+![\_source](https://user-images.githubusercontent.com/49108738/69914610-75f09e80-1489-11ea-858f-3457b4a58b32.png)
+- sort : 결과에서 순서를 정렬할 때 지정
+![범위, 페이지 매김, 필드, 정렬순서 사용](https://user-images.githubusercontent.com/49108738/69914717-8ce3c080-148a-11ea-9706-02bc8343ce7c.png)
+
+#### 4.1.4 응답 구조 이해하기
+- title:elasticsearch : title에 `elasticsearch`가 포함된 도큐먼트를 가져온다.
+- \_source=title,date : 검색결과로 `title`, `date`필드만 가져온다.
+![응답1](https://user-images.githubusercontent.com/49108738/69914730-e1873b80-148a-11ea-95c0-fe8cca45a37d.png)
+![응답2](https://user-images.githubusercontent.com/49108738/69914762-46db2c80-148b-11ea-9e24-434b2679bf36.png)
+
+### 4.2 쿼리와 필터 DSL 소개
